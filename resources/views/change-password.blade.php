@@ -3,12 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <title>Change password - Attendance Tracker</title>
+
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     </head>
 
     <body>
+
         <div class="split">
+
             <aside class="aside">
                 <p class="school">
                     Polytechnic University of the Philippines<br>
@@ -25,9 +29,12 @@
 
             <main class="main">
                 <div class="card">
+
                     <h2>Change password</h2>
 
-                    <form data-next="#changed">
+                    <form method="POST" action="{{ route('password.update') }}">
+                        @csrf
+
                         <label>
                             New Password
                             <span class="pw">
@@ -46,21 +53,7 @@
                                     aria-label="Show password"
                                     aria-pressed="false"
                                 >
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        width="20"
-                                        height="20"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        aria-hidden="true"
-                                    >
-                                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                        <line class="slash" x1="3" y1="3" x2="21" y2="21"/>
-                                    </svg>
+                                    <svg ...></svg>
                                 </button>
                             </span>
                         </label>
@@ -96,21 +89,7 @@
                                     aria-label="Show password"
                                     aria-pressed="false"
                                 >
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        width="20"
-                                        height="20"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        aria-hidden="true"
-                                    >
-                                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                        <line class="slash" x1="3" y1="3" x2="21" y2="21"/>
-                                    </svg>
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><line class="slash" x1="3" y1="3" x2="21" y2="21"/></svg>
                                 </button>
                             </span>
                         </label>
@@ -120,19 +99,15 @@
                         <button class="btn block" type="submit">
                             Change Password
                         </button>
+
                     </form>
+
                 </div>
             </main>
-        </div>
 
-        <div class="modal" id="changed" role="dialog" aria-modal="true">
-            <div class="box">
-                <h2>Password Changed</h2>
-                <p>Log in to access your account.</p>
-                <a class="btn" href="{{ route('login') }}">Go to log in</a>
-            </div>
         </div>
 
         <script src="{{ asset('js/auth.js') }}"></script>
+
     </body>
 </html>

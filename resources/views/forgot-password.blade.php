@@ -3,12 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <title>Forgot password - Attendance Tracker</title>
+
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     </head>
 
     <body>
+
         <div class="split">
+
             <aside class="aside">
                 <p class="school">
                     Polytechnic University of the Philippines<br>
@@ -25,12 +29,16 @@
 
             <main class="main">
                 <div class="card">
+
                     <h2>Forgot password</h2>
+
                     <p class="sub">
                         Enter the Student ID and Email you signed up with.
                     </p>
 
-                    <form data-next="{{ route('change-password') }}">
+                    <form method="POST" action="{{ route('password.verify') }}">
+                        @csrf
+
                         <label>
                             Student ID
                             <input
@@ -57,11 +65,16 @@
                         </button>
                     </form>
 
-                    <a href="{{ route('login') }}">Back to log in</a>
+                    <a href="{{ route('login') }}">
+                        Back to log in
+                    </a>
+
                 </div>
             </main>
+
         </div>
 
         <script src="{{ asset('js/auth.js') }}"></script>
+
     </body>
 </html>

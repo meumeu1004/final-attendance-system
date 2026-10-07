@@ -37,7 +37,22 @@
                         {{ now()->format('m/d/Y') }}
                     </p>
 
-                    @if ($attendanceSession)
+                    @if ($attendanceSession && !$attendanceSubmitted)
+
+                        <div class="attendance-info">
+                            <p>
+                                <strong>Class time:</strong>
+                                {{ \Carbon\Carbon::parse($attendanceSession->started_at)->format('g:i A') }}
+                                –
+                                {{ \Carbon\Carbon::parse($attendanceSession->ended_at)->format('g:i A') }}
+                            </p>
+
+                            <p>
+                                <strong>Attendance deadline:</strong>
+                                {{ \Carbon\Carbon::parse($attendanceSession->deadline)->format('g:i A') }}
+                            </p>
+                        </div>
+
                         <form method="POST" action="{{ route('student.attendance.store') }}">
                             @csrf
 
@@ -45,10 +60,19 @@
                                 Submit Attendance
                             </button>
                         </form>
+
+                    @elseif ($attendanceSubmitted)
+
+                        <p>
+                            Your attendance has already been recorded.
+                        </p>
+
                     @else
+
                         <p>
                             No attendance required for this date.
                         </p>
+
                     @endif
 
                 </div>
@@ -139,7 +163,5 @@
             </div>
         </div>
 
-
-        <script src="{{ asset('js/auth.js') }}"></script>
     </body>
 </html>
