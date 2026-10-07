@@ -1,0 +1,554 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+
+/* Colors */
+:root {
+    --maroon: #970005;
+    --red: #ED0101;
+    --cream: #FFF6E1;
+    --blue: #0C44AC;
+    --navy: #000052;
+    --line: #00005226;
+    --amber: #B86E00;
+    --ok: #1B7A3A;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    font: 400 1rem/1.55 'Instrument Sans', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    min-height: 100vh;
+}
+
+a {
+    color: var(--blue);
+}
+
+:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 2px;
+}
+
+h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -.02em;
+}
+
+h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+/* Layout: info panel on the left, content on the right */
+.split {
+    display: grid;
+    grid-template-columns: minmax(300px, 5fr) 6fr;
+    min-height: 100vh;
+}
+
+.aside {
+    background: var(--maroon);
+    color: var(--cream);
+    padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1.75rem;
+}
+
+.aside .school {
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.aside .course {
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: .02em;
+}
+
+.aside h1 {
+    letter-spacing: .04em;
+}
+
+.main {
+    display: grid;
+    place-items: center;
+    padding: 2.5rem 1.5rem;
+}
+
+.card {
+    width: 100%;
+    max-width: 30rem;
+    display: grid;
+    gap: 1.1rem;
+}
+
+.card > p.sub {
+    margin-top: -.5rem;
+    max-width: 44ch;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    font: 600 1rem 'Instrument Sans', sans-serif;
+    text-align: center;
+    text-decoration: none;
+    padding: .8rem 1.4rem;
+    border-radius: 6px;
+    border: 2px solid var(--blue);
+    background: var(--blue);
+    color: var(--cream);
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: var(--navy);
+    border-color: var(--navy);
+}
+
+.btn.alt {
+    background: transparent;
+    color: var(--blue);
+}
+
+.btn.alt:hover {
+    background: var(--blue);
+    color: var(--cream);
+}
+
+.btn.danger {
+    background: transparent;
+    color: var(--maroon);
+    border-color: var(--maroon);
+}
+
+.btn.danger:hover {
+    background: var(--maroon);
+    color: var(--cream);
+}
+
+.btn.block {
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.link-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .5rem;
+    font-size: .95rem;
+}
+
+/* Forms */
+form {
+    display: grid;
+    gap: 1rem;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+label {
+    display: grid;
+    gap: .3rem;
+    font-weight: 600;
+    font-size: .95rem;
+}
+
+label small,
+.hint {
+    font-weight: 400;
+    font-size: .85rem;
+    opacity: .75;
+}
+
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=file] {
+    font: inherit;
+    padding: .7rem .8rem;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--navy);
+    width: 100%;
+}
+
+input:focus {
+    border-color: var(--blue);
+}
+
+input:user-invalid {
+    border-color: var(--red);
+}
+
+input[type=file] {
+    padding: .5rem;
+}
+
+.check {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    font-weight: 400;
+    font-size: .9rem;
+}
+
+.check input {
+    margin-top: .25rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--blue);
+}
+
+/* Show / hide password button */
+.pw {
+    position: relative;
+    display: block;
+}
+
+.pw input {
+    padding-right: 2.9rem;
+}
+
+.pw input::-ms-reveal {
+    display: none;
+}
+
+.pw-toggle {
+    position: absolute;
+    top: 50%;
+    right: .35rem;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--navy);
+    opacity: .65;
+    cursor: pointer;
+}
+
+.pw-toggle:hover,
+.pw-toggle[aria-pressed=true] {
+    opacity: 1;
+    color: var(--blue);
+}
+
+.pw-toggle .slash {
+    display: none;
+}
+
+.pw-toggle[aria-pressed=true] .slash {
+    display: block;
+}
+
+/* Password checklist and strength meter */
+.rules {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .2rem .8rem;
+    font-size: .85rem;
+}
+
+.rules li::before {
+    content: "○";
+    display: inline-block;
+    width: 1.3em;
+    color: var(--maroon);
+}
+
+.rules li.ok {
+    color: var(--ok);
+}
+
+.rules li.ok::before {
+    content: "✓";
+    font-weight: 700;
+    color: var(--ok);
+}
+
+.meter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .3rem;
+    align-items: center;
+    font-size: .85rem;
+}
+
+.meter i {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--line);
+}
+
+.meter b {
+    grid-column: 1/-1;
+    font-weight: 600;
+    min-height: 1.3em;
+}
+
+.meter[data-level=weak] i:nth-child(1) {
+    background: var(--red);
+}
+
+.meter[data-level=medium] i:nth-child(-n+2) {
+    background: var(--amber);
+}
+
+.meter[data-level=strong] i {
+    background: var(--ok);
+}
+
+.match {
+    font-size: .85rem;
+    min-height: 1.2em;
+}
+
+.match.bad {
+    color: var(--red);
+}
+
+.match.good {
+    color: var(--ok);
+}
+
+.photo {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Profile picture */
+.photo img,
+.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--line);
+    border: 2px solid var(--line);
+}
+
+/* Popups (confirmations, account information) */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: #000052cc;
+    display: none;
+    place-items: center;
+    padding: 1.5rem;
+    z-index: 10;
+}
+
+.modal:target {
+    display: grid;
+}
+
+.modal .box {
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 26rem;
+    width: 100%;
+    display: grid;
+    gap: 1rem;
+}
+
+/* Student home */
+
+/* =========================
+   HEADER
+========================= */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: var(--maroon);
+    color: var(--cream);
+    padding: 1rem clamp(1rem, 4vw, 3rem);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-left i { font-size: 2rem; }
+
+.header-text strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.header-text span {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    color: var(--cream);
+    padding: 0;
+}
+
+.icon-btn:hover { color: #fff; }
+
+/* =========================
+   DASHBOARD
+========================= */
+.dash {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+    display: grid;
+    gap: 2.5rem;
+}
+
+.panel {
+    display: grid;
+    gap: 1rem;
+}
+
+.take {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 1.75rem;
+    border-radius: 10px;
+}
+
+.take .date {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+.take form {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+}
+
+.take label {
+    color: var(--cream);
+}
+
+.table-wrap {
+    overflow-x: auto;
+    border: 2px solid var(--line);
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 420px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: .75rem 1rem;
+    border-bottom: 1px solid var(--line);
+}
+
+th {
+    background: #00005210;
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+.tag {
+    font-weight: 600;
+}
+
+.tag.present {
+    color: var(--ok);
+}
+
+.tag.late {
+    color: var(--amber);
+}
+
+.tag.absent {
+    color: var(--red);
+}
+
+dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .4rem 1rem;
+}
+
+dt {
+    font-weight: 600;
+}
+
+dd {
+    margin: 0;
+}
+
+.btn.light {
+    background: var(--cream);
+    color: var(--navy);
+    border-color: var(--cream);
+}
+
+.btn.light:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--navy);
+}
+
+.when-closed {
+    padding: 1rem 1.25rem;
+    border: 2px dashed var(--cream);
+    border-radius: 8px;
+}
+
+.dash[data-attendance=open] .when-closed {
+    display: none;
+}
+
+.dash[data-attendance=closed] .when-open {
+    display: none;
+}
