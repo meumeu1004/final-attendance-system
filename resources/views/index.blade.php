@@ -37,7 +37,7 @@
                         <a class="btn alt" href="{{ route('signup') }}">Sign up</a>
                     </div>
 
-                    <a href="{{ route('password.request') }}">Forgot password?</a>
+                    <a href="{{ route('forgot-password') }}">Forgot password?</a>
                 </div>
             </main>
         </div>
