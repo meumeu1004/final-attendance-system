@@ -1,4 +1,3 @@
-```blade
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -89,4 +88,3 @@
         <script src="{{ asset('js/auth.js') }}"></script>
     </body>
 </html>
-```
