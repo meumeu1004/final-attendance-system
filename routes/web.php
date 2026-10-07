@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 
 //index
 Route::get('/', function () {
@@ -38,3 +39,13 @@ Route::get('/student/home', [StudentController::class, 'dashboard'])
 
 Route::post('/student/attendance', [StudentController::class, 'storeAttendance'])
     ->name('student.attendance.store');
+
+//admin
+Route::get('/professor/home', [AdminController::class, 'dashboard'])
+    ->name('professor.dashboard');
+
+Route::post('/professor/session', [AdminController::class, 'createSession'])
+    ->name('professor.session.create');
+
+Route::post('/professor/session/{sessionId}/close', [AdminController::class, 'closeSession'])
+    ->name('professor.session.close');
