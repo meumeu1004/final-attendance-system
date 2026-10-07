@@ -1,13 +1,12 @@
 // Shared by adminhome.html, attendance-records.html, classlists.html.
 // Each feature only runs if the elements exist on the current page.
 (() => {
-    const LOGIN_URL = "index.html"; // change to your login page
     const $ = (sel, root = document) => root.querySelector(sel);
 
     /* ---------- Logout ---------- */
-    document.querySelectorAll('[aria-label="Log out"]').forEach((btn) => {
-        btn.addEventListener("click", () => {
-            if (confirm("Log out?")) window.location.href = LOGIN_URL;
+    document.querySelectorAll('form[action$="/logout"]').forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            if (!confirm("Log out?")) event.preventDefault();
         });
     });
 

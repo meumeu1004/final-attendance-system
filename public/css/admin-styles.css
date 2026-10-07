@@ -45,9 +45,9 @@ a { color: inherit; }
    LAYOUT
 ========================= */
 .page {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 30px clamp(1rem, 4vw, 2rem);
+    padding: 38px clamp(1rem, 4vw, 2rem) 56px;
 }
 
 /* =========================
@@ -331,20 +331,17 @@ tbody tr:hover { background-color: var(--cream); }
 ========================= */
 
 .admin-section {
-    padding: 35px 0;
-    border-bottom: 2px solid var(--line);
-}
-
-.admin-section:first-child {
-    padding-top: 0;
-}
-
-.admin-section:last-child {
-    border-bottom: none;
+    scroll-margin-top: 24px;
+    margin-top: 24px;
+    padding: clamp(20px, 3vw, 32px);
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgb(0 0 82 / 5%);
 }
 
 .section-heading {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .section-title {
@@ -357,6 +354,110 @@ tbody tr:hover { background-color: var(--cream); }
     margin: 0;
     color: var(--navy);
     opacity: 0.7;
+}
+
+.dashboard-intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.dashboard-intro h1 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1.15;
+}
+
+.dashboard-intro p:last-child {
+    margin: 8px 0 0;
+    color: #4f5573;
+}
+
+.dashboard-intro .eyebrow {
+    margin: 0 0 8px;
+    color: var(--maroon);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.dashboard-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.dashboard-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.dashboard-nav a:hover {
+    border-color: var(--maroon);
+    background: #fffaf0;
+}
+
+.dashboard-nav span {
+    color: var(--maroon);
+    font-size: 0.75rem;
+}
+
+.admin-section .section-title {
+    margin-bottom: 4px;
+}
+
+.session-list {
+    margin-bottom: 0;
+}
+
+.session-form,
+.record-filter-card {
+    border: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    box-shadow: none;
+}
+
+.session-form-button {
+    justify-content: flex-start;
+}
+
+.attendance-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.table-wrap {
+    padding: 0;
+    border: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.table-wrap table {
+    min-width: 620px;
+}
+
+@media (max-width: 800px) {
+    .dashboard-intro {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-nav {
+        justify-content: flex-start;
+    }
 }
 
 

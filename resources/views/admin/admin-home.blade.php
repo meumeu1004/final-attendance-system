@@ -33,14 +33,30 @@
         </div>
     </div>
 
-    <button class="icon-btn" aria-label="Log out">
-        <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button class="icon-btn" type="submit" aria-label="Log out" title="Log out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </form>
 
 </header>
 
 
 <main class="page">
+
+    <div class="dashboard-intro">
+        <div>
+            <p class="eyebrow">ADMIN WORKSPACE</p>
+            <h1>Professor dashboard</h1>
+            <p>Manage class attendance from one place.</p>
+        </div>
+        <nav class="dashboard-nav" aria-label="Dashboard sections">
+            <a href="#active-sessions"><span>01</span> Active sessions</a>
+            <a href="#create-session"><span>02</span> Open a session</a>
+            <a href="#attendance-records"><span>03</span> Attendance records</a>
+        </nav>
+    </div>
 
     {{-- Success Messages --}}
 
@@ -73,7 +89,7 @@
     {{-- ACTIVE SESSIONS --}}
     {{-- ===================================================== --}}
 
-    <section class="admin-section">
+    <section class="admin-section" id="active-sessions">
 
         <div class="section-heading">
             <div>
@@ -171,7 +187,7 @@
     {{-- OPEN NEW SESSION --}}
     {{-- ===================================================== --}}
 
-    <section class="admin-section">
+    <section class="admin-section" id="create-session">
 
         <div class="section-heading">
             <div>
@@ -299,7 +315,7 @@
     {{-- ATTENDANCE RECORDS --}}
     {{-- ===================================================== --}}
 
-    <section class="admin-section">
+    <section class="admin-section" id="attendance-records">
 
         <div class="section-heading">
             <div>

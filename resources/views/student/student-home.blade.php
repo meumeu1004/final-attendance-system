@@ -20,9 +20,12 @@
                 </div>
             </div>
 
-            <button class="icon-btn" aria-label="Log out">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="icon-btn" type="submit" aria-label="Log out" title="Log out">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </form>
         </header>
 
 
