@@ -21,6 +21,15 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Local XAMPP MySQL setup
+
+1. Start **Apache** and **MySQL** in XAMPP, then create the `attendance_system` database in phpMyAdmin (or run `CREATE DATABASE attendance_system;`).
+2. Install dependencies with `composer install`, then copy `.env.example` to `.env`. The example is configured for XAMPP's default MySQL host, port, and `root` account; update `DB_USERNAME` or `DB_PASSWORD` if yours differ.
+3. Run `php artisan key:generate` and `php artisan migrate` from the project folder. The migrations create the attendance tables and Laravel's supporting tables.
+4. Add the admin row before its sections, then add students and attendance sessions as needed. Use a valid Laravel password hash in `admin.password_hash` and `student.password_hash`; generate one with `Hash::make('your-password')` in `php artisan tinker`. The sample hash sometimes shared with this project is not a valid Laravel bcrypt hash as written.
+
+The attendance migrations make `attendance_record.time_in` nullable so absent records can be saved when an admin closes a session.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -75,7 +75,7 @@ class AdminController extends Controller
             ->get();
 
         // If no session was manually selected, use the first matching session
-        if (!$selectedSession && $recordSessions->count() > 0) {
+        if (! $selectedSession && $recordSessions->count() > 0) {
             $selectedSession = $recordSessions->first()->session_id;
         }
 
@@ -161,10 +161,10 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'section_id' => 'required|exists:section,section_id',
-            'date' => 'required|date',
-            'started_at' => 'required|date',
-            'ended_at' => 'required|date|after:started_at',
-            'deadline' => 'required|date|after_or_equal:started_at',
+            'date' => 'required|date_format:Y-m-d',
+            'started_at' => 'required|date_format:H:i',
+            'ended_at' => 'required|date_format:H:i|after:started_at',
+            'deadline' => 'required|date_format:H:i|after_or_equal:started_at',
         ]);
 
         // Make sure the section belongs to this admin
@@ -173,10 +173,10 @@ class AdminController extends Controller
             ->where('admin_id', $adminId)
             ->exists();
 
-        if (!$sectionExists) {
+        if (! $sectionExists) {
             return back()
                 ->withErrors([
-                    'section_id' => 'Invalid section.'
+                    'section_id' => 'Invalid section.',
                 ])
                 ->withInput();
         }
@@ -192,17 +192,19 @@ class AdminController extends Controller
         if ($existingSession) {
             return back()
                 ->withErrors([
-                    'section_id' => 'This section already has an open attendance session for this date.'
+                    'section_id' => 'This section already has an open attendance session for this date.',
                 ])
                 ->withInput();
         }
 
+        $date = Carbon::parse($validated['date']);
+
         DB::table('attendance_session')->insert([
             'section_id' => $validated['section_id'],
             'admin_id' => $adminId,
-            'started_at' => $validated['started_at'],
-            'ended_at' => $validated['ended_at'],
-            'deadline' => $validated['deadline'],
+            'started_at' => $date->copy()->setTimeFromTimeString($validated['started_at']),
+            'ended_at' => $date->copy()->setTimeFromTimeString($validated['ended_at']),
+            'deadline' => $date->copy()->setTimeFromTimeString($validated['deadline']),
             'status' => 'open',
             'date' => $validated['date'],
         ]);
@@ -222,41 +224,43 @@ class AdminController extends Controller
             ->where('status', 'open')
             ->first();
 
-        if (!$session) {
+        if (! $session) {
             return redirect()
                 ->route('professor.dashboard')
                 ->withErrors([
-                    'session' => 'The attendance session could not be found.'
+                    'session' => 'The attendance session could not be found.',
                 ]);
         }
 
-        // Get all students in this section
-        $students = DB::table('student')
-            ->where('section_id', $session->section_id)
-            ->get();
+        DB::transaction(function () use ($session) {
+            // Get all students in this section
+            $students = DB::table('student')
+                ->where('section_id', $session->section_id)
+                ->get();
 
-        foreach ($students as $student) {
-            $alreadyRecorded = DB::table('attendance_record')
-                ->where('session_id', $session->session_id)
-                ->where('student_id', $student->student_id)
-                ->exists();
+            foreach ($students as $student) {
+                $alreadyRecorded = DB::table('attendance_record')
+                    ->where('session_id', $session->session_id)
+                    ->where('student_id', $student->student_id)
+                    ->exists();
 
-            if (!$alreadyRecorded) {
-                DB::table('attendance_record')->insert([
-                    'session_id' => $session->session_id,
-                    'student_id' => $student->student_id,
-                    'time_in' => null,
-                    'status' => 'absent',
-                ]);
+                if (! $alreadyRecorded) {
+                    DB::table('attendance_record')->insert([
+                        'session_id' => $session->session_id,
+                        'student_id' => $student->student_id,
+                        'time_in' => null,
+                        'status' => 'absent',
+                    ]);
+                }
             }
-        }
 
-        // Close the session
-        DB::table('attendance_session')
-            ->where('session_id', $session->session_id)
-            ->update([
-                'status' => 'closed'
-            ]);
+            // Close the session
+            DB::table('attendance_session')
+                ->where('session_id', $session->session_id)
+                ->update([
+                    'status' => 'closed',
+                ]);
+        });
 
         return redirect()
             ->route('professor.dashboard')

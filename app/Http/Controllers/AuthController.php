@@ -52,6 +52,13 @@ class AuthController extends Controller
             ]);
     }
 
+    public function logout(Request $request)
+    {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
 
     // Verify Student ID and Email for password reset
     public function verifyPasswordReset(Request $request)
@@ -65,7 +72,7 @@ class AuthController extends Controller
             ->where('email', $validated['email'])
             ->first();
 
-        if (!$student) {
+        if (! $student) {
             return back()
                 ->withInput()
                 ->withErrors([
@@ -79,14 +86,13 @@ class AuthController extends Controller
         return redirect()->route('change-password');
     }
 
-
     // Update the student's password
     public function updatePassword(Request $request)
     {
         // Make sure the student passed the verification step
         $studentId = $request->session()->get('password_reset_student_id');
 
-        if (!$studentId) {
+        if (! $studentId) {
             return redirect()->route('forgot-password')
                 ->withErrors([
                     'student_id' => 'Please verify your Student ID and email first.',
@@ -106,7 +112,7 @@ class AuthController extends Controller
 
         $student = Student::where('student_id', $studentId)->first();
 
-        if (!$student) {
+        if (! $student) {
             $request->session()->forget('password_reset_student_id');
 
             return redirect()->route('forgot-password')
