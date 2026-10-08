@@ -17,6 +17,10 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login.store');
 
+//logout
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
 //signup
 Route::get('/signup', [StudentController::class, 'showSignup'])
     ->name('signup');
@@ -29,23 +33,37 @@ Route::get('/forgot-password', function () {
     return view('forgot-password');
 })->name('forgot-password');
 
+Route::post('/forgot-password', [AuthController::class, 'verifyPasswordReset'])
+    ->name('password.verify');
+
 Route::get('/change-password', function () {
+    if (!session()->has('password_reset_student_id')) {
+        return redirect()->route('forgot-password');
+    }
+
     return view('change-password');
 })->name('change-password');
 
-//dashboard
-Route::get('/student/home', [StudentController::class, 'dashboard'])
-    ->name('student.dashboard');
+Route::post('/change-password', [AuthController::class, 'updatePassword'])
+    ->name('password.update');
 
-Route::post('/student/attendance', [StudentController::class, 'storeAttendance'])
-    ->name('student.attendance.store');
+//student
+Route::middleware('user.type:student')->group(function () {
+    Route::get('/student/home', [StudentController::class, 'dashboard'])
+        ->name('student.dashboard');
+
+    Route::post('/student/attendance', [StudentController::class, 'storeAttendance'])
+        ->name('student.attendance.store');
+});
 
 //admin
-Route::get('/professor/home', [AdminController::class, 'dashboard'])
-    ->name('professor.dashboard');
+Route::middleware('user.type:admin')->group(function () {
+    Route::get('/professor/home', [AdminController::class, 'dashboard'])
+        ->name('professor.dashboard');
 
-Route::post('/professor/session', [AdminController::class, 'createSession'])
-    ->name('professor.session.create');
+    Route::post('/professor/session', [AdminController::class, 'createSession'])
+        ->name('professor.session.create');
 
-Route::post('/professor/session/{sessionId}/close', [AdminController::class, 'closeSession'])
-    ->name('professor.session.close');
+    Route::post('/professor/session/{sessionId}/close', [AdminController::class, 'closeSession'])
+        ->name('professor.session.close');
+});

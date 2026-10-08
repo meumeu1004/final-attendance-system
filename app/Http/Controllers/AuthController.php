@@ -53,6 +53,16 @@ class AuthController extends Controller
     }
 
 
+    // Log out (admin or student)
+    public function logout(Request $request)
+    {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+
+
     // Verify Student ID and Email for password reset
     public function verifyPasswordReset(Request $request)
     {

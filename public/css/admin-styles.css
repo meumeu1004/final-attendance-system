@@ -653,3 +653,9 @@ tbody tr:hover { background-color: var(--cream); }
         grid-template-columns: 1fr;
     }
 }
+
+/* Student ID search inside the Attendance Records filter card */
+.record-search {
+    max-width: none;
+    margin: 20px 0 0;
+}
