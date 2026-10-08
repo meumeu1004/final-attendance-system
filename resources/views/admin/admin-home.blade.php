@@ -33,9 +33,12 @@
         </div>
     </div>
 
-    <button class="icon-btn" aria-label="Log out">
-        <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
+    <form method="POST" action="{{ route('logout') }}" id="logout-form">
+        @csrf
+        <button type="submit" class="icon-btn" aria-label="Log out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </form>
 
 </header>
 
@@ -396,6 +399,22 @@
 
             </div>
 
+            {{-- Student ID search --}}
+
+            <div class="search-bar record-search">
+                <input
+                    type="search"
+                    id="student-search"
+                    name="student_id"
+                    value="{{ $studentSearch }}"
+                    placeholder="Search Student ID"
+                    aria-label="Search Student ID"
+                >
+                <button type="submit" id="search-btn" aria-label="Search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
         </form>
 
 
@@ -521,7 +540,11 @@
 
                             <tr>
                                 <td colspan="4">
-                                    No students found for this session.
+                                    @if ($studentSearch !== '')
+                                        No student matching "{{ $studentSearch }}" in this session.
+                                    @else
+                                        No students found for this session.
+                                    @endif
                                 </td>
                             </tr>
 
@@ -540,16 +563,22 @@
                 <i class="fa-solid fa-clipboard-list"></i>
 
                 <p>
-                    Select a session to view attendance records.
+                    @if ($selectedSection || $selectedDate)
+                        No sessions found for the selected section/date.
+                    @else
+                        Select a session to view attendance records.
+                    @endif
                 </p>
 
             </div>
-
+            
         @endif
 
     </section>
 
 </main>
+
+<script src="{{ asset('js/admin.js') }}"></script>
 
 </body>
 </html>

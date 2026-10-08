@@ -12,6 +12,9 @@ class AdminController extends Controller
     {
         $adminId = $request->session()->get('user_id');
 
+        // Close sessions whose deadline has passed (and mark absentees)
+        $this->closeExpiredSessions($adminId);
+
         // Get sections belonging to this admin
         $sections = DB::table('section')
             ->where('admin_id', $adminId)
@@ -40,6 +43,7 @@ class AdminController extends Controller
         $selectedSection = $request->input('section_id');
         $selectedDate = $request->input('date');
         $selectedSession = $request->input('session_id');
+        $studentSearch = trim((string) $request->input('student_id', ''));
 
         // Sessions available for the Attendance Records section
         $recordSessionsQuery = DB::table('attendance_session')
@@ -73,6 +77,12 @@ class AdminController extends Controller
             ->orderByDesc('attendance_session.date')
             ->orderByDesc('attendance_session.started_at')
             ->get();
+
+        // Ignore a session that no longer matches the Section/Date filters
+        // (e.g. the Section was changed after a session was picked)
+        if ($selectedSession && !$recordSessions->contains('session_id', (int) $selectedSession)) {
+            $selectedSession = null;
+        }
 
         // If no session was manually selected, use the first matching session
         if (!$selectedSession && $recordSessions->count() > 0) {
@@ -131,6 +141,8 @@ class AdminController extends Controller
                     ->orderBy('student.first_name')
                     ->get();
 
+                // Counts always reflect the whole session,
+                // even while searching for one Student ID
                 $presentCount = $attendanceRecords
                     ->where('status', 'present')
                     ->count();
@@ -138,6 +150,16 @@ class AdminController extends Controller
                 $absentCount = $attendanceRecords
                     ->where('status', 'absent')
                     ->count();
+
+                // Search by Student ID (partial match, case-insensitive)
+                if ($studentSearch !== '') {
+                    $attendanceRecords = $attendanceRecords
+                        ->filter(fn ($record) => str_contains(
+                            strtolower($record->student_id),
+                            strtolower($studentSearch)
+                        ))
+                        ->values();
+                }
             }
         }
 
@@ -148,6 +170,7 @@ class AdminController extends Controller
             'selectedSection',
             'selectedDate',
             'selectedSession',
+            'studentSearch',
             'selectedSessionData',
             'attendanceRecords',
             'presentCount',
@@ -162,9 +185,9 @@ class AdminController extends Controller
         $validated = $request->validate([
             'section_id' => 'required|exists:section,section_id',
             'date' => 'required|date',
-            'started_at' => 'required|date',
-            'ended_at' => 'required|date|after:started_at',
-            'deadline' => 'required|date|after_or_equal:started_at',
+            'started_at' => 'required|date_format:H:i',
+            'ended_at' => 'required|date_format:H:i|after:started_at',
+            'deadline' => 'required|date_format:H:i|after_or_equal:started_at',
         ]);
 
         // Make sure the section belongs to this admin
@@ -197,12 +220,18 @@ class AdminController extends Controller
                 ->withInput();
         }
 
+        // The form sends times only (e.g. "09:30"); store them as full
+        // date + time so they can be compared with now().
+        $toDateTime = fn ($time) => preg_match('/^\d{1,2}:\d{2}$/', $time)
+            ? $validated['date'] . ' ' . $time . ':00'
+            : $time;
+
         DB::table('attendance_session')->insert([
             'section_id' => $validated['section_id'],
             'admin_id' => $adminId,
-            'started_at' => $validated['started_at'],
-            'ended_at' => $validated['ended_at'],
-            'deadline' => $validated['deadline'],
+            'started_at' => $toDateTime($validated['started_at']),
+            'ended_at' => $toDateTime($validated['ended_at']),
+            'deadline' => $toDateTime($validated['deadline']),
             'status' => 'open',
             'date' => $validated['date'],
         ]);
@@ -230,36 +259,55 @@ class AdminController extends Controller
                 ]);
         }
 
-        // Get all students in this section
-        $students = DB::table('student')
-            ->where('section_id', $session->section_id)
-            ->get();
-
-        foreach ($students as $student) {
-            $alreadyRecorded = DB::table('attendance_record')
-                ->where('session_id', $session->session_id)
-                ->where('student_id', $student->student_id)
-                ->exists();
-
-            if (!$alreadyRecorded) {
-                DB::table('attendance_record')->insert([
-                    'session_id' => $session->session_id,
-                    'student_id' => $student->student_id,
-                    'time_in' => null,
-                    'status' => 'absent',
-                ]);
-            }
-        }
-
-        // Close the session
-        DB::table('attendance_session')
-            ->where('session_id', $session->session_id)
-            ->update([
-                'status' => 'closed'
-            ]);
+        $this->closeSessionAndMarkAbsent($session);
 
         return redirect()
             ->route('professor.dashboard')
             ->with('session_closed', true);
+    }
+
+    // Closes every open session of this admin whose deadline has passed.
+    private function closeExpiredSessions($adminId): void
+    {
+        $expired = DB::table('attendance_session')
+            ->where('admin_id', $adminId)
+            ->where('status', 'open')
+            ->where('deadline', '<', now())
+            ->get();
+
+        foreach ($expired as $session) {
+            $this->closeSessionAndMarkAbsent($session);
+        }
+    }
+
+    // Marks every student without a record as absent, then closes the session.
+    private function closeSessionAndMarkAbsent($session): void
+    {
+        DB::transaction(function () use ($session) {
+            $missing = DB::table('student')
+                ->where('section_id', $session->section_id)
+                ->whereNotIn(
+                    'student_id',
+                    DB::table('attendance_record')
+                        ->where('session_id', $session->session_id)
+                        ->select('student_id')
+                )
+                ->pluck('student_id');
+
+            $rows = $missing->map(fn ($studentId) => [
+                'session_id' => $session->session_id,
+                'student_id' => $studentId,
+                'time_in' => null,
+                'status' => 'absent',
+            ])->all();
+
+            if ($rows) {
+                DB::table('attendance_record')->insert($rows);
+            }
+
+            DB::table('attendance_session')
+                ->where('session_id', $session->session_id)
+                ->update(['status' => 'closed']);
+        });
     }
 }
