@@ -66,18 +66,20 @@ h2 {
 }
 
 .aside .school {
-    font-size: 1.15rem;
+    font-size: .95rem;
     font-weight: 500;
     line-height: 1.4;
 }
 
 .aside .course {
-    font-weight: 500;
-    line-height: 1.5;
+    font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+    font-weight: 600;
+    line-height: 1.35;
     letter-spacing: .02em;
 }
 
 .aside h1 {
+    font-size: clamp(1.6rem, 2.6vw, 2.6rem);
     letter-spacing: .04em;
 }
 
@@ -290,11 +292,11 @@ input[type=file] {
 }
 
 .pw-toggle .slash {
-    display: none;
+    display: block;
 }
 
 .pw-toggle[aria-pressed=true] .slash {
-    display: block;
+    display: none;
 }
 
 .form-error {

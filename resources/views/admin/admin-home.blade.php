@@ -412,6 +412,23 @@
 
             </div>
 
+            {{-- Student ID search --}}
+
+            <div class="search-bar record-search">
+                <input
+                    type="search"
+                    id="student-search"
+                    name="student_id"
+                    value="{{ $studentSearch }}"
+                    placeholder="Search Student ID"
+                    aria-label="Search Student ID"
+                >
+                <button type="submit" id="search-btn" aria-label="Search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
+
         </form>
 
 

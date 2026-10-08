@@ -36,6 +36,10 @@
                         Enter the Student ID and Email you signed up with.
                     </p>
 
+                    @if ($errors->any())
+                        <p class="form-error">{{ $errors->first() }}</p>
+                        @endif
+
                     <form method="POST" action="{{ route('password.verify') }}">
                         @csrf
 

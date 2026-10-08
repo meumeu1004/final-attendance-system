@@ -20,9 +20,13 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('logout') }}">
+            <form 
+                method="POST" 
+                action="{{ route('logout') }}"
+                onsubmit="return confirm('Log out?');"
+            >
                 @csrf
-                <button class="icon-btn" type="submit" aria-label="Log out" title="Log out">
+                <button type="submit" class="icon-btn" aria-label="Log out">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </form>

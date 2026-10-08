@@ -12,7 +12,7 @@ return new class extends Migration
             $table->increments('record_id');
             $table->unsignedInteger('session_id');
             $table->string('student_id', 20);
-            $table->dateTime('time_in');
+            $table->dateTime('time_in')->nullable();
             $table->enum('status', ['present', 'absent']);
             $table->timestamp('submitted_at')->useCurrent();
 
